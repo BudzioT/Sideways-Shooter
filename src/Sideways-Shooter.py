@@ -1,5 +1,6 @@
 import os.path
 import sys
+from time import sleep
 
 import pygame
 
@@ -7,6 +8,7 @@ from Background import Background
 from Settings import Settings
 from Spaceship import Spaceship
 from Enemy import Enemy
+from Stats import Stats
 
 
 class Shooter:
@@ -19,6 +21,9 @@ class Shooter:
 
         # Set setting of the game
         self.settings = Settings(size)
+
+        # Stats of the game
+        self.stats = Stats(self)
 
         # Get current directory
         self.base_path = os.path.dirname(os.path.abspath(__file__))
@@ -110,11 +115,10 @@ class Shooter:
         self._scroll_background()
         # Draw the player
         self.spaceship.draw()
-        # Draw the bullets
-        self.spaceship.update_bullets()
         # Draw the enemies
         self.enemies.draw(self.surface)
-
+        # Draw and update spaceship bullets
+        self._update_sp_bullets()
         # Update contents of the surface
         pygame.display.flip()
 
@@ -137,6 +141,13 @@ class Shooter:
         if pygame.sprite.spritecollideany(self.spaceship, self.enemies):
             # Handle spaceship getting hit
             self._spaceship_hit()
+
+    def _update_sp_bullets(self):
+        """Draw existing bullets, clean old ones"""
+        # Draw the bullets, clean old ones
+        self.spaceship.update_bullets()
+        self._check_sp_bullet_collisions()
+
 
     def _scroll_background(self):
         """Scroll the background"""
@@ -166,20 +177,42 @@ class Shooter:
         # Add it to the group
         self.enemies.add(new_enemy)
 
-    def _spaceship_hit(self):
-        """Handle spaceship getting hit"""
-        pass
-
     def _check_enemies_edges(self):
         """If enemy touches edges, change its direction"""
         for enemy in self.enemies.sprites():
             if enemy.check_vertical_edges():
                 enemy.update_vertical_direction()
-                print("EDGE!")
             if enemy.check_horizontal_edges():
-                enemy.horizontal_direction = not enemy.horizontal_direction
+                enemy.horizontal_direction = -enemy.horizontal_direction
                 enemy.update_vertical_direction()
-                print("EDGE!")
+
+    def _check_sp_bullet_collisions(self):
+        """Check collisions between spaceship bullets and enemies, spawn enemies if needed"""
+        # Check for collisions with enemies
+        collisions = pygame.sprite.groupcollide(self.spaceship.bullets, self.enemies,
+                                                True, True)
+        # Spawn new enemies
+        self._create_enemies()
+
+    def _spaceship_hit(self):
+        """Handle spaceship getting hit"""
+        # If this was the last live, end the game
+        if self.stats.spaceships_left <= 0:
+            pass
+
+        # Decrement spaceships count (lives)
+        self.stats.spaceships_left -= 1
+        # Clean the bullets and the enemies
+        self.spaceship.bullets.empty()
+        self.enemies.empty()
+
+        # Create new group of enemies
+        self._create_enemies()
+        # Return spaceship to the starting position
+        self.spaceship.return_start_pos()
+
+        # Give player time to realize getting shot
+        sleep(1)
 
 
 if __name__ == "__main__":

@@ -26,8 +26,8 @@ class Enemy(Sprite):
         self.rect = self.image.get_rect()
 
         # Spawn the enemy at random part of right side of the surface
-        self.rect.x = self.settings.window_width
-        self.rect.y = randint(self.rect.height, self.settings.window_height - self.rect.height)
+        self.rect.x = self.settings.window_width - self.rect.width - 1
+        self.rect.y = randint(self.rect.height + 1, self.settings.window_height - self.rect.height - 1)
 
         # Vertical direction of movement: 1 is downwards, 0 is straight, -1 is upwards
         self.vertical_direction = randint(-1, 1)
@@ -58,5 +58,10 @@ class Enemy(Sprite):
                 self.rect.right >= self.settings.window_width)
 
     def update_vertical_direction(self):
-        """Change enemy direction to random one"""
-        self.vertical_direction = randint(-1, 1)
+        """Change enemy's vertical direction to opposite one"""
+        # Change the direction
+        direction = -self.vertical_direction
+        # Update direction to a new one
+        self.vertical_direction = direction
+
+        # Create bullet at temp location, fix it

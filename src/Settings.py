@@ -2,7 +2,7 @@ class Settings:
     """Settings of the game"""
     def __init__(self, size, spaceship_speed_x=2.5, spaceship_speed_y=2,
                  sp_bullet_width=15, sp_bullet_height=3, sp_bullet_speed=3,
-                 sp_bullet_limit=3, enemy_speed=1, enemy_limit=10):
+                 sp_bullet_limit=3, enemy_speed=1, enemy_limit=10, spaceships_limit=3):
         """Initialize settings"""
         # General settings
         self.window_width = size[0]
@@ -11,6 +11,7 @@ class Settings:
         # Spaceship settings
         self.spaceship_speed_x = spaceship_speed_x
         self.spaceship_speed_y = spaceship_speed_y
+        self.spaceships_limit = spaceships_limit
 
         # Spaceship bullet settings
         self.sp_bullet_color = (250, 189, 90)
@@ -21,3 +22,6 @@ class Settings:
         # Enemy settings
         self.enemy_speed = enemy_speed
         self.enemy_limit = enemy_limit
+
+        # Enemy bullet settings
+        self.enemy_bullet_color = (7, 237, 68)
