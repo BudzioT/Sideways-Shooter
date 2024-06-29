@@ -4,6 +4,8 @@ import sys
 import pygame
 
 from Background import Background
+from Settings import Settings
+from Spaceship import Spaceship
 
 
 class Shooter:
@@ -13,6 +15,9 @@ class Shooter:
         # Init pygame and pygame mixer
         pygame.init()
         pygame.mixer.init()
+
+        # Set setting of the game
+        self.settings = Settings(size)
 
         # Get current directory
         self.base_path = os.path.dirname(os.path.abspath(__file__))
@@ -26,6 +31,8 @@ class Shooter:
 
         # Game's background
         self.background = Background(self)
+        # Spaceship - the player
+        self.spaceship = Spaceship(self)
 
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
@@ -56,10 +63,24 @@ class Shooter:
     def _update_surface(self):
         """Update visible items on surface"""
         # Draw the background
-        self.background.draw()
+        self._scroll_background()
+        # Draw the player
+        self.spaceship.draw()
 
         # Update contents of the surface
         pygame.display.flip()
+
+    def _scroll_background(self):
+        """Scroll the background"""
+        # Position variable
+        i = 0
+        # While current position is still in background tiles, draw it
+        while i < self.background.tiles:
+            self.background.draw(i)
+            i += 1
+        # Scroll the background and reset it if needed
+        self.background.scroll -= 6
+        self.background.reset_scroll()
 
 
 if __name__ == "__main__":
