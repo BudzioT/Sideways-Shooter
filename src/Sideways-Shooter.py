@@ -11,6 +11,7 @@ from Enemy import Enemy
 from Stats import Stats
 from Button import Button
 from Title import Title
+from Statboard import Statboard
 
 
 class Shooter:
@@ -21,6 +22,9 @@ class Shooter:
         pygame.init()
         pygame.mixer.init()
 
+        # Get current directory
+        self.base_path = os.path.dirname(os.path.abspath(__file__))
+
         # Set setting of the game
         self.settings = Settings(size)
 
@@ -29,9 +33,6 @@ class Shooter:
 
         # Stats of the game
         self.stats = Stats(self)
-
-        # Get current directory
-        self.base_path = os.path.dirname(os.path.abspath(__file__))
 
         # Set new surface with given size and name Sideways Shooter
         if fullscreen:
@@ -42,6 +43,8 @@ class Shooter:
 
         # Game's background
         self.background = Background(self)
+        # Menu background
+        self.menu_background = self.settings.bg_color
         # Spaceship - the player
         self.spaceship = Spaceship(self)
         # Enemies
@@ -51,11 +54,14 @@ class Shooter:
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
 
+        # Statistics board
+        self.stat_board = Statboard(self)
+
         # Play the game button
         self.play_button = Button(self, "Play")
 
         # Title of the game
-        self.title = Title("Sideways shooter")
+        self.title = Title(self, "Sideways shooter")
 
     def run(self):
         """Run the game"""
@@ -144,11 +150,20 @@ class Shooter:
             self._update_sp_bullets()
             # Draw and update enemy bullets
             self._update_enemy_bullets()
-        # If game isn't active, draw the play button
+
+            # Draw the statistics board
+            self.stat_board.draw()
+
+        # If game isn't active, draw the game menu
         else:
+            # Draw background
+            self.surface.fill(self.menu_background)
             # Draw play button
             self.play_button.draw_button()
+            # Draw the title
             self.title.draw()
+            # Draw the highscore
+            self.stat_board.draw_highscore()
 
         # Update contents of the surface
         pygame.display.flip()
@@ -242,6 +257,16 @@ class Shooter:
         # Check for collisions with enemies
         collisions = pygame.sprite.groupcollide(self.spaceship.bullets, self.enemies,
                                                 True, True)
+
+        # If there are collisions, update the score
+        if collisions:
+            # Check every collision, increase the score for each one
+            for enemy in collisions.values():
+                self.stats.score += self.settings.earn_points * len(enemy)
+            # Update the statistics board
+            self.stat_board.set_score()
+            self.stat_board.check_highscore()
+
         # Spawn new enemies
         self._create_enemies()
 
@@ -262,12 +287,22 @@ class Shooter:
 
     def _spaceship_hit(self):
         """Handle spaceship getting hit"""
+        # Set the highscore
+        self.stats.save_highscore()
+
         # If this was the last live, end the game
         if self.stats.spaceships_left <= 0:
-            pass
+            self.active = False
+            # Show the mouse to navigate through the menu
+            pygame.mouse.set_visible(True)
+            # Go back to menu
+            return None
 
         # Decrement spaceships count (lives)
         self.stats.spaceships_left -= 1
+        # Update the spaceships count
+        self.stat_board.set_spaceships()
+
         # Clean the bullets and the enemies
         self.spaceship.bullets.empty()
         self.enemies.empty()

@@ -1,6 +1,7 @@
 import os
 
 import pygame.image
+from pygame.sprite import Sprite
 
 from SpaceshipBullet import SpaceshipBullet
 
@@ -9,6 +10,9 @@ class Spaceship:
     """Spaceship which player can control"""
     def __init__(self, game):
         """Initialize spaceship at starting position"""
+        super().__init__()
+
+        # Set the surface based of the game one
         self.surface = game.surface
         self.surface_rect = self.surface.get_rect()
 

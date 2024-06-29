@@ -26,7 +26,7 @@ class Title:
         # Place title in the upper center of the screen
         self.title_image_rect = self.title_image.get_rect()
         self.title_image_rect.centerx = self.surface_rect.centerx
-        self.title_image_rect.centery = self.surface_rect.centery - self.surface_rect.height / 2
+        self.title_image_rect.centery = self.surface_rect.centery - self.surface_rect.height / 3
 
     def draw(self):
         """Draw the renderer title"""

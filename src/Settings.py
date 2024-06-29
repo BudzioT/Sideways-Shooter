@@ -4,11 +4,14 @@ class Settings:
                  sp_bullet_width=15, sp_bullet_height=3, sp_bullet_speed=3,
                  sp_bullet_limit=5, enemy_speed=1, enemy_limit=7, spaceships_limit=3,
                  enemy_bullet_limit=2, enemy_bullet_speed=2,
-                 enemy_bullet_width=10, enemy_bullet_height=3):
+                 enemy_bullet_width=10, enemy_bullet_height=3, bg_color=(32, 57, 61),
+                 earn_points=5):
         """Initialize settings"""
         # General settings
         self.window_width = size[0]
         self.window_height = size[1]
+        self.bg_color = bg_color
+        self.earn_points = earn_points
 
         # Spaceship settings
         self.spaceship_speed_x = spaceship_speed_x
