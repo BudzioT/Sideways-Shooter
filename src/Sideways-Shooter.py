@@ -113,12 +113,17 @@ class Shooter:
         """Update visible items on surface"""
         # Draw the background
         self._scroll_background()
+
         # Draw the player
         self.spaceship.draw()
         # Draw the enemies
         self.enemies.draw(self.surface)
+
         # Draw and update spaceship bullets
         self._update_sp_bullets()
+        # Draw and update enemy bullets
+        self._update_enemy_bullets()
+
         # Update contents of the surface
         pygame.display.flip()
 
@@ -126,8 +131,13 @@ class Shooter:
         """Update position of things"""
         # Spaceship position
         self.spaceship.update_pos()
+
         # Spaceship bullets position
         self.spaceship.bullets.update()
+        # Enemy bullets position
+        for enemy in self.enemies.sprites():
+            enemy.bullets.update()
+
         # Enemies position
         self._update_enemies()
 
@@ -142,12 +152,25 @@ class Shooter:
             # Handle spaceship getting hit
             self._spaceship_hit()
 
+        # Update enemy bullets
+        self._update_enemy_bullets()
+
     def _update_sp_bullets(self):
         """Draw existing bullets, clean old ones"""
         # Draw the bullets, clean old ones
         self.spaceship.update_bullets()
+        # Check for collision with enemies
         self._check_sp_bullet_collisions()
 
+    def _update_enemy_bullets(self):
+        """Fire new bullets, draw existing ones and clean old ones"""
+
+        # Fire the bullets, draw them, clean old ones for every enemy
+        for enemy in self.enemies:
+            enemy.fire_randomly()
+            enemy.update_bullets()
+        # Check for collision with spaceship
+        self._check_enemy_bullet_collisions()
 
     def _scroll_background(self):
         """Scroll the background"""
@@ -193,6 +216,15 @@ class Shooter:
                                                 True, True)
         # Spawn new enemies
         self._create_enemies()
+
+    def _check_enemy_bullet_collisions(self):
+        """Check collisions between enemy bullets and spaceship, decrease spaceship count if needed"""
+        # Check for collisions with spaceship
+        for enemy in self.enemies.sprites():
+            collisions = pygame.sprite.spritecollideany(self.spaceship, enemy.bullets)
+            if collisions:
+                self._spaceship_hit()
+                break
 
     def _spaceship_hit(self):
         """Handle spaceship getting hit"""
