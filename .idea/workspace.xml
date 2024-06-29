@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9db29289-ab91-4395-85cf-f8a95a544e18" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Button.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Title.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Enemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Enemy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EnemyBullet.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/EnemyBullet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Button.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Button.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Sideways-Shooter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Sideways-Shooter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Title.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Title.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +73,8 @@
       <option name="presentableId" value="Default" />
       <updated>1719653399337</updated>
       <workItem from="1719653401050" duration="7118000" />
-      <workItem from="1719662428857" duration="17810000" />
+      <workItem from="1719662428857" duration="18513000" />
+      <workItem from="1719687480600" duration="3673000" />
     </task>
     <servers />
   </component>
@@ -86,7 +84,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Sideways_Shooter$Background.coverage" NAME="Background Coverage Results" MODIFIED="1719657880812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/Sideways_Shooter$Spaceship.coverage" NAME="Spaceship Coverage Results" MODIFIED="1719667062475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/Sideways_Shooter$Sideways_Shooter.coverage" NAME="Sideways-Shooter Coverage Results" MODIFIED="1719680157636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/Sideways_Shooter$Sideways_Shooter.coverage" NAME="Sideways-Shooter Coverage Results" MODIFIED="1719689601133" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/Sideways_Shooter$Settings.coverage" NAME="Settings Coverage Results" MODIFIED="1719680154821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>

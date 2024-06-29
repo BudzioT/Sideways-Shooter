@@ -9,6 +9,8 @@ from Settings import Settings
 from Spaceship import Spaceship
 from Enemy import Enemy
 from Stats import Stats
+from Button import Button
+from Title import Title
 
 
 class Shooter:
@@ -21,6 +23,9 @@ class Shooter:
 
         # Set setting of the game
         self.settings = Settings(size)
+
+        # Current state of the game
+        self.active = False
 
         # Stats of the game
         self.stats = Stats(self)
@@ -45,6 +50,12 @@ class Shooter:
 
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
+
+        # Play the game button
+        self.play_button = Button(self, "Play")
+
+        # Title of the game
+        self.title = Title("Sideways shooter")
 
     def run(self):
         """Run the game"""
@@ -72,6 +83,13 @@ class Shooter:
             # Handle key release events
             elif event.type == pygame.KEYUP:
                 self._handle_keyup(event)
+
+            # Handle mouse presses
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Get the cursor position
+                cursor_pos = pygame.mouse.get_pos()
+                # If user clicked the mouse, check if he clicked Play button
+                self._check_play(cursor_pos)
 
     def _handle_keydown(self, event):
         """Handle keydown events"""
@@ -111,35 +129,45 @@ class Shooter:
 
     def _update_surface(self):
         """Update visible items on surface"""
-        # Draw the background
-        self._scroll_background()
 
-        # Draw the player
-        self.spaceship.draw()
-        # Draw the enemies
-        self.enemies.draw(self.surface)
+        # If game is active, draw its content
+        if self.active:
+            # Draw the background
+            self._scroll_background()
 
-        # Draw and update spaceship bullets
-        self._update_sp_bullets()
-        # Draw and update enemy bullets
-        self._update_enemy_bullets()
+            # Draw the player
+            self.spaceship.draw()
+            # Draw the enemies
+            self.enemies.draw(self.surface)
+
+            # Draw and update spaceship bullets
+            self._update_sp_bullets()
+            # Draw and update enemy bullets
+            self._update_enemy_bullets()
+        # If game isn't active, draw the play button
+        else:
+            # Draw play button
+            self.play_button.draw_button()
+            self.title.draw()
 
         # Update contents of the surface
         pygame.display.flip()
 
     def _update_pos(self):
         """Update position of things"""
-        # Spaceship position
-        self.spaceship.update_pos()
+        # If the game is active, update all positions
+        if self.active:
+            # Spaceship position
+            self.spaceship.update_pos()
 
-        # Spaceship bullets position
-        self.spaceship.bullets.update()
-        # Enemy bullets position
-        for enemy in self.enemies.sprites():
-            enemy.bullets.update()
+            # Spaceship bullets position
+            self.spaceship.bullets.update()
+            # Enemy bullets position
+            for enemy in self.enemies.sprites():
+                enemy.bullets.update()
 
-        # Enemies position
-        self._update_enemies()
+            # Enemies position
+            self._update_enemies()
 
     def _update_enemies(self):
         """Update all enemies positions"""
@@ -226,6 +254,12 @@ class Shooter:
                 self._spaceship_hit()
                 break
 
+    def _check_play(self, mouse_pos):
+        """If mouse is on the button, start the game"""
+        # Check if mouse collides with the Play button
+        if self.play_button.rect.collidepoint(mouse_pos) and not self.active:
+            self._start_game()
+
     def _spaceship_hit(self):
         """Handle spaceship getting hit"""
         # If this was the last live, end the game
@@ -245,6 +279,13 @@ class Shooter:
 
         # Give player time to realize getting shot
         sleep(1)
+
+    def _start_game(self):
+        """Start the game"""
+        self.active = True
+
+        # Hide the cursor, so player can focus on the game
+        pygame.mouse.set_visible(False)
 
 
 if __name__ == "__main__":
