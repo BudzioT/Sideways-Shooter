@@ -2,6 +2,8 @@ import os
 
 import pygame.image
 
+from SpaceshipBullet import SpaceshipBullet
+
 
 class Spaceship:
     """Spaceship which player can control"""
@@ -12,6 +14,9 @@ class Spaceship:
 
         # Set settings like the game
         self.settings = game.settings
+
+        # Set game reference
+        self.game = game
 
         # Get file path
         base_path = game.base_path
@@ -29,6 +34,9 @@ class Spaceship:
         # Exact positions
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
+
+        # Spaceship bullets
+        self.bullets = pygame.sprite.Group()
 
         # Flags indicating movement
         self.move_flags = {
@@ -70,3 +78,26 @@ class Spaceship:
         # Set the more precise, exact positions
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
+
+    def fire_bullet(self):
+        """Fire a bullet"""
+        # Create a bullet if there is still space, add it to the bullets group
+        if len(self.bullets) < self.settings.sp_bullet_limit:
+            bullet = SpaceshipBullet(self.game)
+            self.bullets.add(bullet)
+
+    def _cleanup_bullets(self):
+        """Cleanup bullets after they leave visible part of the surface"""
+        # Go through each bullet (copy, because bullets can be removed)
+        for bullet in self.bullets.sprites().copy():
+            # If left part of the bullet touches the edge, remove it
+            if bullet.rect.left > self.settings.window_width:
+                self.bullets.remove(bullet)
+
+    def update_bullets(self):
+        """Draw bullets, cleanup old ones"""
+        # Draw every bullet
+        for bullet in self.bullets.sprites():
+            bullet.draw()
+        # Cleanup old bullets
+        self._cleanup_bullets()

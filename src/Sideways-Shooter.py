@@ -6,6 +6,7 @@ import pygame
 from Background import Background
 from Settings import Settings
 from Spaceship import Spaceship
+from Enemy import Enemy
 
 
 class Shooter:
@@ -33,6 +34,8 @@ class Shooter:
         self.background = Background(self)
         # Spaceship - the player
         self.spaceship = Spaceship(self)
+        # Enemies
+        self.enemies = pygame.sprite.Group()
 
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
@@ -81,6 +84,9 @@ class Shooter:
         # Move down
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.spaceship.move_flags["Down"] = True
+        # Shoot a bullet
+        elif event.key == pygame.K_SPACE:
+            self.spaceship.fire_bullet()
 
     def _handle_keyup(self, event):
         """Handle keyup events"""
@@ -103,13 +109,18 @@ class Shooter:
         self._scroll_background()
         # Draw the player
         self.spaceship.draw()
+        # Draw the bullets
+        self.spaceship.update_bullets()
 
         # Update contents of the surface
         pygame.display.flip()
 
     def _update_pos(self):
         """Update position of things"""
+        # Spaceship position
         self.spaceship.update_pos()
+        # Spaceship bullets position
+        self.spaceship.bullets.update()
 
     def _scroll_background(self):
         """Scroll the background"""
@@ -122,6 +133,13 @@ class Shooter:
         # Scroll the background and reset it if needed
         self.background.scroll -= 6
         self.background.reset_scroll()
+
+    def _create_enemies(self):
+        """Create group of enemies"""
+        # Create first enemy to get size of it
+        enemy = Enemy(self)
+        enemy_height = enemy.rect.height
+        # While there is still space for enemies, create them
 
 
 if __name__ == "__main__":
