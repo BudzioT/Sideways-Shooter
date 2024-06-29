@@ -36,6 +36,7 @@ class Shooter:
         self.spaceship = Spaceship(self)
         # Enemies
         self.enemies = pygame.sprite.Group()
+        self._create_enemies()
 
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
@@ -111,6 +112,8 @@ class Shooter:
         self.spaceship.draw()
         # Draw the bullets
         self.spaceship.update_bullets()
+        # Draw the enemies
+        self.enemies.draw(self.surface)
 
         # Update contents of the surface
         pygame.display.flip()
@@ -121,6 +124,19 @@ class Shooter:
         self.spaceship.update_pos()
         # Spaceship bullets position
         self.spaceship.bullets.update()
+        # Enemies position
+        self._update_enemies()
+
+    def _update_enemies(self):
+        """Update all enemies positions"""
+        self.enemies.update()
+        # Change direction if there is a collision with an edge
+        self._check_enemies_edges()
+
+        # If there is a collision between enemy and spaceship
+        if pygame.sprite.spritecollideany(self.spaceship, self.enemies):
+            # Handle spaceship getting hit
+            self._spaceship_hit()
 
     def _scroll_background(self):
         """Scroll the background"""
@@ -140,6 +156,30 @@ class Shooter:
         enemy = Enemy(self)
         enemy_height = enemy.rect.height
         # While there is still space for enemies, create them
+        while len(self.enemies) < self.settings.enemy_limit:
+            self._create_enemy()
+
+    def _create_enemy(self):
+        """Create an enemy"""
+        # Create an enemy
+        new_enemy = Enemy(self)
+        # Add it to the group
+        self.enemies.add(new_enemy)
+
+    def _spaceship_hit(self):
+        """Handle spaceship getting hit"""
+        pass
+
+    def _check_enemies_edges(self):
+        """If enemy touches edges, change its direction"""
+        for enemy in self.enemies.sprites():
+            if enemy.check_vertical_edges():
+                enemy.update_vertical_direction()
+                print("EDGE!")
+            if enemy.check_horizontal_edges():
+                enemy.horizontal_direction = not enemy.horizontal_direction
+                enemy.update_vertical_direction()
+                print("EDGE!")
 
 
 if __name__ == "__main__":
