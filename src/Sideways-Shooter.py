@@ -163,6 +163,9 @@ class Shooter:
             # Draw and update enemy bullets
             self._update_enemy_bullets()
 
+            # Draw the PowerUps
+            self.powerups.draw(self.surface)
+
             # Draw the statistics board
             self.stat_board.draw()
 
@@ -192,6 +195,9 @@ class Shooter:
             # Enemy bullets position
             for enemy in self.enemies.sprites():
                 enemy.bullets.update()
+
+            # PowerUp positions
+            self.powerups.update()
 
             # Enemies position
             self._update_enemies()
@@ -226,6 +232,10 @@ class Shooter:
             enemy.update_bullets()
         # Check for collision with spaceship
         self._check_enemy_bullet_collisions()
+
+    def _update_powerups(self):
+        """Update PowerUps positions, clean old ones"""
+        pass
 
     def _scroll_background(self):
         """Scroll the background"""
@@ -274,6 +284,11 @@ class Shooter:
                 self.stats.score += self.settings.earn_points
                 # Increase difficulty if needed
                 self.settings.increase_diff(int(self.stats.score))
+
+                # Spawn the PowerUp
+                new_powerup = PowerUp(game, enemy[0], "BulletsUp")
+                self.powerups.add(new_powerup)
+
             # Play the enemy death sound
             self._play_enemy_death_sound()
 
@@ -363,6 +378,14 @@ class Shooter:
     def _play_enemy_death_sound(self):
         """Play the death sound"""
         self.enemy_death_sound.play()
+
+    def _clean_powerups(self):
+        """Clean the powerups that left the visible surface"""
+        # Go thorough each powerup that exists
+        for powerup in self.powerups.sprites().copy():
+            # If it went beyond the left edge of the surface, clean it
+            if powerup.check_left_edge():
+                self.powerups.remove(powerup)
 
 
 if __name__ == "__main__":

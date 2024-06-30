@@ -5,7 +5,7 @@ class Settings:
                  sp_bullet_limit=5, enemy_speed=1, enemy_limit=5, spaceships_limit=3,
                  enemy_bullet_limit=2, enemy_bullet_speed=2,
                  enemy_bullet_width=10, enemy_bullet_height=3, bg_color=(32, 57, 61),
-                 earn_points=5):
+                 earn_points=5, powerup_speed_x=3, powerup_speed_y=4):
         """Initialize settings"""
         # General settings
         self.window_width = size[0]
@@ -45,6 +45,14 @@ class Settings:
         # Enemy bullet init settings
         self.enemy_bullet_init_limit = enemy_bullet_limit
         self.enemy_bullet_init_speed = enemy_bullet_speed
+
+        # PowerUps settings
+        self.powerup_speed_x = powerup_speed_x
+        self.powerup_speed_y = powerup_speed_y
+
+        # PowerUps init settings
+        self.powerup_init_speed_x = powerup_speed_x
+        self.powerup_init_speed_y = powerup_speed_y
 
     def increase_diff(self, score):
         """Change difficulty depending on the score"""

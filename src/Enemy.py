@@ -80,7 +80,7 @@ class Enemy(Sprite):
                 or (self.rect.bottom >= self.settings.window_height))
 
     def check_horizontal_edges(self):
-        """Return if enemy touches left edge of the surface"""
+        """Return if enemy touches left or right edge of the surface"""
         return (self.rect.left <= 0 or
                 self.rect.right >= self.settings.window_width)
 
