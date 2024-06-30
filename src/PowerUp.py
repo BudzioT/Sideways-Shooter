@@ -30,7 +30,7 @@ class PowerUp(Sprite):
         self.rect = self.image.get_rect()
         # Scale it down, update the rect
         self.image = (
-            pygame.transform.scale(self.image, (self.rect.width / 10, self.rect.height / 10)))
+            pygame.transform.scale(self.image, (self.rect.width / 8, self.rect.height / 8)))
         self.rect = self.image.get_rect()
 
         # Spawn PowerUp at enemy location
@@ -52,14 +52,16 @@ class PowerUp(Sprite):
         self.y += self.settings.powerup_speed_y * self.vertical_direction
         self.rect.y = self.y
 
-
-
     def check_vertical_edges(self):
         """Check if there is a collision with vertical edge, if so, change the direction"""
-        if (self.rect.bottom >= self.surface_rect.height) or (self.rect.top >= 0):
+        if (self.rect.bottom >= self.game.settings.window_height) or (self.rect.top <= 0):
             # Change the direction
             self.vertical_direction = -self.vertical_direction
 
     def check_left_edge(self):
         """Return if the PowerUp is behind the left edge"""
-        return self.rect.right >= 0
+        return self.rect.right <= 0
+
+    def upgrade_ship(self):
+        """Upgrade the ship based of a PowerUp type"""
+        pass

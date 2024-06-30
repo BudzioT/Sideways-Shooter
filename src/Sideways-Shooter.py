@@ -1,6 +1,7 @@
 import os.path
 import sys
 from time import sleep
+import random
 
 import pygame
 
@@ -54,8 +55,11 @@ class Shooter:
         # Enemies
         self.enemies = pygame.sprite.Group()
         self._create_enemies()
-        # Powerups
+        # PowerUps
         self.powerups = pygame.sprite.Group()
+
+        # PowerUp types list
+        self.powerups_types = ["BulletsUp", "HeightUp", "SpeedUp", "Shield"]
 
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
@@ -197,7 +201,7 @@ class Shooter:
                 enemy.bullets.update()
 
             # PowerUp positions
-            self.powerups.update()
+            self._update_powerups()
 
             # Enemies position
             self._update_enemies()
@@ -235,7 +239,14 @@ class Shooter:
 
     def _update_powerups(self):
         """Update PowerUps positions, clean old ones"""
-        pass
+        # Update position of PowerUps
+        self.powerups.update()
+        # Check every one of them, bounce them off if needed
+        for powerup in self.powerups.sprites():
+            powerup.check_vertical_edges()
+
+        # Clean old ones
+        self._clean_powerups()
 
     def _scroll_background(self):
         """Scroll the background"""
@@ -262,6 +273,17 @@ class Shooter:
         # Add it to the group
         self.enemies.add(new_enemy)
 
+    def _create_powerup(self, enemy):
+        """Create a powerup at random time with random type"""
+
+        # Spawn PowerUps at random, based off of frequency setting
+        if random.random() < self.settings.powerup_frequency:
+            # Choose a random PowerUp type
+            random_type = random.sample(self.powerups_types, 1)
+            # Spawn the PowerUp and add it to the group
+            new_powerup = PowerUp(game, enemy, random_type[0])
+            self.powerups.add(new_powerup)
+
     def _check_enemies_edges(self):
         """If enemy touches edges, change its direction"""
         for enemy in self.enemies.sprites():
@@ -285,9 +307,8 @@ class Shooter:
                 # Increase difficulty if needed
                 self.settings.increase_diff(int(self.stats.score))
 
-                # Spawn the PowerUp
-                new_powerup = PowerUp(game, enemy[0], "BulletsUp")
-                self.powerups.add(new_powerup)
+                # Try to spawn a PowerUp
+                self._create_powerup(enemy[0])
 
             # Play the enemy death sound
             self._play_enemy_death_sound()
@@ -307,6 +328,14 @@ class Shooter:
             if collisions:
                 self._spaceship_hit()
                 break
+
+    def _check_sp_powerup_collisions(self):
+        """Check collisions between spaceship and PowerUp, boost the spaceship if needed"""
+        # Check for collisions with spaceship
+        for powerup in self.powerups.sprites():
+            collisions = pygame.sprite.spritecollideany(self.spaceship, powerup)
+            if collisions:
+                print("Collision!")
 
     def _check_play(self, mouse_pos):
         """If mouse is on the button, start the game"""

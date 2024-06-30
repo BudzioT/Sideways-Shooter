@@ -5,7 +5,7 @@ class Settings:
                  sp_bullet_limit=5, enemy_speed=1, enemy_limit=5, spaceships_limit=3,
                  enemy_bullet_limit=2, enemy_bullet_speed=2,
                  enemy_bullet_width=10, enemy_bullet_height=3, bg_color=(32, 57, 61),
-                 earn_points=5, powerup_speed_x=3, powerup_speed_y=4):
+                 earn_points=5, powerup_speed_x=2, powerup_speed_y=3, powerup_frequency=0.1):
         """Initialize settings"""
         # General settings
         self.window_width = size[0]
@@ -26,6 +26,10 @@ class Settings:
         self.sp_bullet_speed = sp_bullet_speed
         self.sp_bullet_width, self.sp_bullet_height = sp_bullet_width, sp_bullet_height
         self.sp_bullet_limit = sp_bullet_limit
+
+        # Spaceship bullet init settings
+        self.sp_init_bullet_limit = sp_bullet_limit
+        self.sp_init_bullet_height = sp_bullet_height
 
         # Enemy settings
         self.enemy_speed = enemy_speed
@@ -49,10 +53,12 @@ class Settings:
         # PowerUps settings
         self.powerup_speed_x = powerup_speed_x
         self.powerup_speed_y = powerup_speed_y
+        self.powerup_frequency = powerup_frequency
 
         # PowerUps init settings
         self.powerup_init_speed_x = powerup_speed_x
         self.powerup_init_speed_y = powerup_speed_y
+        self.powerup_init_frequency = powerup_frequency
 
     def increase_diff(self, score):
         """Change difficulty depending on the score"""
@@ -70,6 +76,9 @@ class Settings:
                 self.enemy_bullet_limit += 1
                 # Earn more points
                 self.earn_points += 7
+                # Speed up PowerUps
+                self.powerup_speed_x += 0.5
+                self.powerup_speed_y += 0.5
 
             # If score is multiply of 5000
             elif score % 5000 == 0:
@@ -79,6 +88,8 @@ class Settings:
                 self.enemy_bullet_speed += 1
                 # Earn more points
                 self.earn_points += 15
+                # Make PowerUps more frequent
+                self.powerup_frequency += 0.05
 
     def reset_settings(self):
         """Reset changed settings"""
@@ -92,3 +103,8 @@ class Settings:
 
         # Points settings
         self.earn_points = self.earn_points_init
+
+        # PowerUp settings
+        self.powerup_speed_x = self.powerup_init_speed_x
+        self.powerup_speed_y = self.powerup_init_speed_y
+        self.powerup_frequency = self.powerup_init_frequency
