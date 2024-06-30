@@ -12,6 +12,7 @@ from Stats import Stats
 from Button import Button
 from Title import Title
 from Statboard import Statboard
+from PowerUp import PowerUp
 
 
 class Shooter:
@@ -53,6 +54,8 @@ class Shooter:
         # Enemies
         self.enemies = pygame.sprite.Group()
         self._create_enemies()
+        # Powerups
+        self.powerups = pygame.sprite.Group()
 
         # Timer for FPS calculation
         self.timer = pygame.time.Clock()
@@ -65,6 +68,12 @@ class Shooter:
 
         # Title of the game
         self.title = Title(self, "Sideways shooter")
+
+        # Load enemy death sound
+        self.enemy_death_sound = (
+            pygame.mixer.Sound(os.path.join(self.base_path, "sounds/enemyKilled.flac")))
+        # Set the volume to quieter one
+        self.enemy_death_sound.set_volume(0.1)
 
     def run(self):
         """Run the game"""
@@ -178,9 +187,6 @@ class Shooter:
             # Spaceship position
             self.spaceship.update_pos()
 
-            # Increase difficulty if needed
-            self.settings.increase_diff(int(self.stats.score))
-
             # Spaceship bullets position
             self.spaceship.bullets.update()
             # Enemy bullets position
@@ -265,10 +271,12 @@ class Shooter:
         if collisions:
             # Check every collision, increase the score for each one
             for enemy in collisions.values():
-                print(f"Before increment: {self.stats.score}")
-                print(f"Incrementing by: {self.settings.earn_points}")
                 self.stats.score += self.settings.earn_points
-                print(f"After increment: {self.stats.score}")
+                # Increase difficulty if needed
+                self.settings.increase_diff(int(self.stats.score))
+            # Play the enemy death sound
+            self._play_enemy_death_sound()
+
             # Update the statistics board
             self.stat_board.set_score()
             self.stat_board.check_highscore()
@@ -316,6 +324,9 @@ class Shooter:
         # Decrement spaceships count (lives)
         self.stats.spaceships_left -= 1
 
+        # Play spaceship explosion sound
+        self.spaceship.play_explosion()
+
         # Update the spaceships count
         self.stat_board.set_spaceships()
 
@@ -348,6 +359,10 @@ class Shooter:
 
         # Hide the cursor, so player can focus on the game
         pygame.mouse.set_visible(False)
+
+    def _play_enemy_death_sound(self):
+        """Play the death sound"""
+        self.enemy_death_sound.play()
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import os
 from random import randint, random
 
 import pygame
+import pygame.mixer
 from pygame.sprite import Sprite
 
 from EnemyBullet import EnemyBullet
@@ -33,6 +34,11 @@ class Enemy(Sprite):
         # Update the rect
         self.rect = self.image.get_rect()
 
+        # Load shoot sound
+        self.shoot_sound = pygame.mixer.Sound(os.path.join(base_path, "sounds/enemy_shoot.ogg"))
+        # Set the volume to quieter one
+        self.shoot_sound.set_volume(0.3)
+
         # Spawn the enemy at random part of right side of the surface
         self.rect.x = self.settings.window_width - self.rect.width - 1
         self.rect.y = randint(self.rect.height + 1, self.settings.window_height - self.rect.height - 1)
@@ -61,6 +67,7 @@ class Enemy(Sprite):
         if len(self.bullets) < self.settings.enemy_bullet_limit:
             new_bullet = EnemyBullet(self.game, self)
             self.bullets.add(new_bullet)
+            self.shoot_sound.play()
 
     def fire_randomly(self):
         """Fire bullet at random interval"""

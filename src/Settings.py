@@ -48,28 +48,29 @@ class Settings:
 
     def increase_diff(self, score):
         """Change difficulty depending on the score"""
-        # If score is multiply of 100 but not 1000 and 5000
-        if (score % 100 == 0) and (score % 1000 != 0) and (score % 5000 != 0):
-            # Increase enemy limit by 1
-            self.enemy_limit += 1
-            # Earn more points
-            self.earn_points *= 1.05
+        if score > 0:
+            # If score is multiply of 100 but not 1000 and 5000
+            if (score % 100 == 0) and (score % 1000 != 0) and (score % 5000 != 0):
+                # Increase enemy limit by 1
+                self.enemy_limit += 1
+                # Earn more points
+                self.earn_points += 3
 
-        # If score is multiply of 1000 and not 5000
-        elif score % 1000 == 0:
-            # Increase enemy bullets limit by 1
-            self.enemy_bullet_limit += 1
-            # Earn more points
-            self.earn_points *= 1.1
+            # If score is multiply of 1000 and not 5000
+            elif (score % 1000 == 0) and (score % 5000 != 0):
+                # Increase enemy bullets limit by 1
+                self.enemy_bullet_limit += 1
+                # Earn more points
+                self.earn_points += 7
 
-        # If score is multiply of 5000
-        elif score % 5000 == 0:
-            # Increase enemy speed by 1 pixel
-            self.enemy_speed += 1
-            # Increase enemy bullet speed by 1 pixel
-            self.enemy_bullet_speed += 1
-            # Earn more points
-            self.earn_points *= 1.2
+            # If score is multiply of 5000
+            elif score % 5000 == 0:
+                # Increase enemy speed by 1 pixel
+                self.enemy_speed += 1
+                # Increase enemy bullet speed by 1 pixel
+                self.enemy_bullet_speed += 1
+                # Earn more points
+                self.earn_points += 15
 
     def reset_settings(self):
         """Reset changed settings"""

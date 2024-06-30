@@ -34,6 +34,13 @@ class Spaceship(Sprite):
 
         # Load the shooting sound
         self.shoot_sound = pygame.mixer.Sound(os.path.join(base_path, "sounds/sp_shoot.wav"))
+        # Set the volume to quieter
+        self.shoot_sound.set_volume(0.05)
+
+        # Load explosion sound
+        self.explosion_sound = pygame.mixer.Sound(os.path.join(base_path, "sounds/explosion.wav"))
+        # Set the volume to quieter
+        self.shoot_sound.set_volume(0.1)
 
         # Set the player start position
         self.return_start_pos()
@@ -94,7 +101,6 @@ class Spaceship(Sprite):
             self.bullets.add(bullet)
             self.shoot_sound.play()
 
-
     def _cleanup_bullets(self):
         """Cleanup bullets after they leave visible part of the surface"""
         # Go through each bullet (copy, because bullets can be removed)
@@ -110,3 +116,7 @@ class Spaceship(Sprite):
             bullet.draw()
         # Cleanup old bullets
         self._cleanup_bullets()
+
+    def play_explosion(self):
+        """Play the explosion sound"""
+        self.explosion_sound.play()
