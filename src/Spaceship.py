@@ -32,6 +32,14 @@ class Spaceship(Sprite):
             pygame.transform.scale(self.image, (self.rect.width / 2.3, self.rect.height / 2.3)))
         self.rect = self.image.get_rect()
 
+        # Load the shielded image, convert it
+        self.shielded_image = (
+            pygame.image.load(os.path.join(base_path, "images/playerShielded.png")).convert_alpha())
+        # Make it 2.3 times smaller
+        self.shielded_image = (
+            pygame.transform.scale(self.shielded_image,
+                                   (self.rect.width, self.rect.height)))
+
         # Load the shooting sound
         self.shoot_sound = pygame.mixer.Sound(os.path.join(base_path, "sounds/sp_shoot.wav"))
         # Set the volume to quieter
@@ -52,6 +60,11 @@ class Spaceship(Sprite):
         # Spaceship bullets
         self.bullets = pygame.sprite.Group()
 
+        # Spaceship shield boolean
+        self.shield = False
+        # Shield timer
+        self.timer = 0
+
         # Flags indicating movement
         self.move_flags = {
             "Left": False,
@@ -62,7 +75,14 @@ class Spaceship(Sprite):
 
     def draw(self):
         """Draw the spaceship"""
-        self.surface.blit(self.image, self.rect)
+        # If the shield is turned off
+        if not self.shield:
+            # Draw normal spaceship
+            self.surface.blit(self.image, self.rect)
+        # If shield is active, draw it
+        if self.shield:
+            # Draw the shielded spaceship
+            self.surface.blit(self.shielded_image, self.rect)
 
     def update_pos(self):
         """Update position based of movement flags"""
@@ -82,6 +102,12 @@ class Spaceship(Sprite):
         # Update real rect positions
         self.rect.x = self.x
         self.rect.y = self.y
+
+        # If spaceship has a shield
+        if self.shield:
+            # If shield was on 4 or more seconds, turn it off
+            if pygame.time.get_ticks() - self.timer >= 4000:
+                self.shield = False
 
     def return_start_pos(self):
         """Return to the start position"""

@@ -14,6 +14,7 @@ from Button import Button
 from Title import Title
 from Statboard import Statboard
 from PowerUp import PowerUp
+from Explosion import Explosion
 
 
 class Shooter:
@@ -169,6 +170,9 @@ class Shooter:
             # Draw and update enemy bullets
             self._update_enemy_bullets()
 
+            # Draw the explosion effect
+            self.explosions.draw(self.surface)
+
             # Draw the PowerUps
             self.powerups.draw(self.surface)
 
@@ -204,6 +208,9 @@ class Shooter:
 
             # PowerUp positions
             self._update_powerups()
+
+            # Explosion effect frame
+            self.explosions.update()
 
             # Enemies position
             self._update_enemies()
@@ -344,8 +351,6 @@ class Shooter:
             # Upgrade the Spaceship
             powerup.upgrade_ship()
 
-
-
     def _check_play(self, mouse_pos):
         """If mouse is on the button, start the game"""
         # Check if mouse collides with the Play button
@@ -357,43 +362,52 @@ class Shooter:
         # Set the highscore
         self.stats.save_highscore()
 
-        # If this was the last live, end the game
-        if self.stats.spaceships_left <= 0:
-            self.active = False
+        # If the spaceship doesn't have a shield, handle spaceship getting hit
+        if not self.spaceship.shield:
+            # Play explosion effect
+            explosion = Explosion(self, self.spaceship)
+            self.explosions.add(explosion)
 
-            # Increase lose count
-            self.lose_count += 1
-            # Show the mouse to navigate through the menu
-            pygame.mouse.set_visible(True)
+            # Clean the bullets and the enemies
+            self.spaceship.bullets.empty()
+            for enemy in self.enemies.sprites():
+                enemy.bullets.empty()
+            self.enemies.empty()
 
-            # If user lost for the first time, increase the live limit, because after losing,
-            # automatically user loses starting live
-            if self.lose_count == 1:
-                self.settings.spaceships_limit = self.settings.spaceships_limit + 1
+            # If this was the last live, end the game
+            if self.stats.spaceships_left <= 0:
+                self.active = False
 
-            # Go back to menu
-            return None
+                # Increase lose count
+                self.lose_count += 1
+                # Show the mouse to navigate through the menu
+                pygame.mouse.set_visible(True)
 
-        # Decrement spaceships count (lives)
-        self.stats.spaceships_left -= 1
+                # If user lost for the first time, increase the live limit, because after losing,
+                # automatically user loses starting live
+                #if self.lose_count == 1:
+                #    self.settings.spaceships_limit = self.settings.spaceships_limit + 1
 
-        # Play spaceship explosion sound
-        self.spaceship.play_explosion()
+                # Go back to menu
+                return
 
-        # Update the spaceships count
-        self.stat_board.set_spaceships()
+            # Decrement spaceships count (lives)
+            self.stats.spaceships_left -= 1
 
-        # Return spaceship to the starting position
-        self.spaceship.return_start_pos()
+            # Play spaceship explosion sound
+            self.spaceship.play_explosion()
 
-        # Clean the bullets and the enemies
-        self.spaceship.bullets.empty()
-        for enemy in self.enemies.sprites():
-            enemy.bullets.empty()
-        self.enemies.empty()
+            # Update the spaceships count
+            self.stat_board.set_spaceships()
 
-        # Give player time to realize getting shot
-        sleep(1)
+            # Return spaceship to the starting position
+            self.spaceship.return_start_pos()
+
+            # Give player time to realize getting shot
+            sleep(0.2)
+        # If the spaceship have a shield, turn it off
+        else:
+            return
 
     def _start_game(self):
         """Start the game"""
@@ -404,8 +418,20 @@ class Shooter:
         # Reset the stats
         self.stats.reset_stats()
 
+        # Reset ship position
+        self.spaceship.return_start_pos()
+
+        # Clean the bullets and the enemies
+        self.spaceship.bullets.empty()
+        for enemy in self.enemies.sprites():
+            enemy.bullets.empty()
+        self.enemies.empty()
+
         # Update the score
         self.stat_board.set_score()
+
+        # Update the spaceships count
+        self.stat_board.set_spaceships()
 
         # Activate the game
         self.active = True

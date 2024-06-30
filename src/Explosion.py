@@ -1,3 +1,5 @@
+import os
+
 import pygame.image
 from pygame.sprite import Sprite
 
@@ -24,7 +26,7 @@ class Explosion(Sprite):
             # Create a file name based of explosion number
             file_name = "images/explosion/explosion0" + str(i) + ".png"
             # Append the file to the images list
-            self.images.append(pygame.image.load(base_path, file_name))
+            self.images.append(pygame.image.load(os.path.join(base_path, file_name)))
 
         # Current frame
         self.frame = 0
@@ -46,7 +48,7 @@ class Explosion(Sprite):
         # If this is the fifth frame from the last one, update the image
         if self.tick_count % 5 == 0:
             # If there are still frames left
-            if self.frame < len(self.images):
+            if self.frame < len(self.images) - 1:
                 # Go to the next frame
                 self.frame += 1
                 # Save the image of the new explosion frame
@@ -57,7 +59,3 @@ class Explosion(Sprite):
             # If there aren't frames anymore, delete the explosion effect
             else:
                 self.kill()
-
-    def draw(self):
-        """Draw the explosion effect"""
-        pass

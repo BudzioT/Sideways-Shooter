@@ -17,6 +17,9 @@ class PowerUp(Sprite):
         # Save the game settings
         self.settings = game.settings
 
+        # Save reference to the spaceship
+        self.spaceship = game.spaceship
+
         # Grab surface from the game
         self.surface = game.surface
         self.surface_rect = self.surface.get_rect()
@@ -77,4 +80,6 @@ class PowerUp(Sprite):
             self.settings.spaceship_speed_y += 0.5
         # Create a shield
         elif self.power_type == "Shield":
-            pass
+            self.spaceship.shield = True
+            self.spaceship.timer = float(pygame.time.get_ticks())
+
