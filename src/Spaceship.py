@@ -32,6 +32,9 @@ class Spaceship(Sprite):
             pygame.transform.scale(self.image, (self.rect.width / 2.3, self.rect.height / 2.3)))
         self.rect = self.image.get_rect()
 
+        # Load the shooting sound
+        self.shoot_sound = pygame.mixer.Sound(os.path.join(base_path, "sounds/sp_shoot.wav"))
+
         # Set the player start position
         self.return_start_pos()
 
@@ -89,6 +92,8 @@ class Spaceship(Sprite):
         if len(self.bullets) < self.settings.sp_bullet_limit:
             bullet = SpaceshipBullet(self.game)
             self.bullets.add(bullet)
+            self.shoot_sound.play()
+
 
     def _cleanup_bullets(self):
         """Cleanup bullets after they leave visible part of the surface"""

@@ -28,6 +28,9 @@ class Shooter:
         # Set setting of the game
         self.settings = Settings(size)
 
+        # Lose count to fix spaceship count
+        self.lose_count = 0
+
         # Current state of the game
         self.active = False
 
@@ -175,6 +178,9 @@ class Shooter:
             # Spaceship position
             self.spaceship.update_pos()
 
+            # Increase difficulty if needed
+            self.settings.increase_diff(int(self.stats.score))
+
             # Spaceship bullets position
             self.spaceship.bullets.update()
             # Enemy bullets position
@@ -229,9 +235,6 @@ class Shooter:
 
     def _create_enemies(self):
         """Create group of enemies"""
-        # Create first enemy to get size of it
-        enemy = Enemy(self)
-        enemy_height = enemy.rect.height
         # While there is still space for enemies, create them
         while len(self.enemies) < self.settings.enemy_limit:
             self._create_enemy()
@@ -262,7 +265,10 @@ class Shooter:
         if collisions:
             # Check every collision, increase the score for each one
             for enemy in collisions.values():
-                self.stats.score += self.settings.earn_points * len(enemy)
+                print(f"Before increment: {self.stats.score}")
+                print(f"Incrementing by: {self.settings.earn_points}")
+                self.stats.score += self.settings.earn_points
+                print(f"After increment: {self.stats.score}")
             # Update the statistics board
             self.stat_board.set_score()
             self.stat_board.check_highscore()
@@ -293,39 +299,52 @@ class Shooter:
         # If this was the last live, end the game
         if self.stats.spaceships_left <= 0:
             self.active = False
+
+            # Increase lose count
+            self.lose_count += 1
             # Show the mouse to navigate through the menu
             pygame.mouse.set_visible(True)
-            print("LOST: Lives = ", self.stats.spaceships_left)
+
+            # If user lost for the first time, increase the live limit, because after losing,
+            # automatically user loses starting live
+            if self.lose_count == 1:
+                self.settings.spaceships_limit = self.settings.spaceships_limit + 1
+
             # Go back to menu
             return None
 
         # Decrement spaceships count (lives)
         self.stats.spaceships_left -= 1
 
-        print(f"Now you have{self.stats.spaceships_left} lives")
-
         # Update the spaceships count
         self.stat_board.set_spaceships()
 
-        # Clean the bullets and the enemies
-        self.spaceship.bullets.empty()
-        self.enemies.empty()
-
-        # Create new group of enemies
-        self._create_enemies()
         # Return spaceship to the starting position
         self.spaceship.return_start_pos()
+
+        # Clean the bullets and the enemies
+        self.spaceship.bullets.empty()
+        for enemy in self.enemies.sprites():
+            enemy.bullets.empty()
+        self.enemies.empty()
 
         # Give player time to realize getting shot
         sleep(1)
 
     def _start_game(self):
         """Start the game"""
-        # Activate the game
-        self.active = True
+        # Reset the changed settings if user lost at least once
+        if self.lose_count > 0:
+            self.settings.reset_settings()
 
         # Reset the stats
         self.stats.reset_stats()
+
+        # Update the score
+        self.stat_board.set_score()
+
+        # Activate the game
+        self.active = True
 
         # Hide the cursor, so player can focus on the game
         pygame.mouse.set_visible(False)
