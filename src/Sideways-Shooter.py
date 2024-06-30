@@ -57,6 +57,8 @@ class Shooter:
         self._create_enemies()
         # PowerUps
         self.powerups = pygame.sprite.Group()
+        # Explosion effect
+        self.explosions = pygame.sprite.Group()
 
         # PowerUp types list
         self.powerups_types = ["BulletsUp", "HeightUp", "SpeedUp", "Shield"]
@@ -245,6 +247,9 @@ class Shooter:
         for powerup in self.powerups.sprites():
             powerup.check_vertical_edges()
 
+        # Check for collisions with spaceship
+        self._check_sp_powerup_collisions()
+
         # Clean old ones
         self._clean_powerups()
 
@@ -332,10 +337,14 @@ class Shooter:
     def _check_sp_powerup_collisions(self):
         """Check collisions between spaceship and PowerUp, boost the spaceship if needed"""
         # Check for collisions with spaceship
-        for powerup in self.powerups.sprites():
-            collisions = pygame.sprite.spritecollideany(self.spaceship, powerup)
-            if collisions:
-                print("Collision!")
+        powerup = pygame.sprite.spritecollideany(self.spaceship, self.powerups)
+        if powerup:
+            # Remove the PowerUp
+            self.powerups.remove(powerup)
+            # Upgrade the Spaceship
+            powerup.upgrade_ship()
+
+
 
     def _check_play(self, mouse_pos):
         """If mouse is on the button, start the game"""
@@ -417,6 +426,8 @@ class Shooter:
                 self.powerups.remove(powerup)
 
 
+# Only run the game if compiling this file
 if __name__ == "__main__":
+    # Create the Sideways Shooter game and run it
     game = Shooter()
     game.run()

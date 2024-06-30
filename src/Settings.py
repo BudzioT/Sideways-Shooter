@@ -5,7 +5,7 @@ class Settings:
                  sp_bullet_limit=5, enemy_speed=1, enemy_limit=5, spaceships_limit=3,
                  enemy_bullet_limit=2, enemy_bullet_speed=2,
                  enemy_bullet_width=10, enemy_bullet_height=3, bg_color=(32, 57, 61),
-                 earn_points=5, powerup_speed_x=2, powerup_speed_y=3, powerup_frequency=0.1):
+                 earn_points=5, powerup_speed_x=2, powerup_speed_y=3, powerup_frequency=0.15):
         """Initialize settings"""
         # General settings
         self.window_width = size[0]
@@ -21,6 +21,10 @@ class Settings:
         self.spaceship_speed_y = spaceship_speed_y
         self.spaceships_limit = spaceships_limit
 
+        # Spaceship init settings
+        self.spaceship_init_speed_x = spaceship_speed_x
+        self.spaceship_init_speed_y = spaceship_speed_y
+
         # Spaceship bullet settings
         self.sp_bullet_color = (250, 189, 90)
         self.sp_bullet_speed = sp_bullet_speed
@@ -30,6 +34,7 @@ class Settings:
         # Spaceship bullet init settings
         self.sp_init_bullet_limit = sp_bullet_limit
         self.sp_init_bullet_height = sp_bullet_height
+        self.sp_init_bullet_speed = sp_bullet_speed
 
         # Enemy settings
         self.enemy_speed = enemy_speed
@@ -93,6 +98,15 @@ class Settings:
 
     def reset_settings(self):
         """Reset changed settings"""
+        # Reset spaceship settings
+        self.spaceship_speed_x = self.spaceship_init_speed_x
+        self.spaceship_speed_y = self.spaceship_init_speed_y
+
+        # Reset spaceship bullet settings
+        self.sp_bullet_speed = self.sp_init_bullet_speed
+        self.sp_bullet_height = self.sp_init_bullet_height
+        self.sp_bullet_limit = self.sp_init_bullet_limit
+
         # Reset enemy settings
         self.enemy_limit = self.enemy_init_limit
         self.enemy_speed = self.enemy_init_speed
@@ -101,10 +115,10 @@ class Settings:
         self.enemy_bullet_limit = self.enemy_bullet_init_limit
         self.enemy_bullet_speed = self.enemy_bullet_init_speed
 
-        # Points settings
+        # Reset points settings
         self.earn_points = self.earn_points_init
 
-        # PowerUp settings
+        # Reset PowerUp settings
         self.powerup_speed_x = self.powerup_init_speed_x
         self.powerup_speed_y = self.powerup_init_speed_y
         self.powerup_frequency = self.powerup_init_frequency

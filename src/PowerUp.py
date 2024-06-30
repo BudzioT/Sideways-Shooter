@@ -64,4 +64,17 @@ class PowerUp(Sprite):
 
     def upgrade_ship(self):
         """Upgrade the ship based of a PowerUp type"""
-        pass
+        # Increase limit of bullets
+        if self.power_type == "BulletsUp":
+            self.settings.sp_bullet_limit += 1
+        # Increase the height of bullets
+        elif self.power_type == "HeightUp":
+            self.settings.sp_bullet_height += 2
+        # Increase the speed of spaceship and bullets
+        elif self.power_type == "SpeedUp":
+            self.settings.sp_bullet_speed += 0.5
+            self.settings.spaceship_speed_x += 0.5
+            self.settings.spaceship_speed_y += 0.5
+        # Create a shield
+        elif self.power_type == "Shield":
+            pass
