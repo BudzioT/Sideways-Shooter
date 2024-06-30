@@ -6,7 +6,7 @@ from pygame.sprite import Sprite
 from SpaceshipBullet import SpaceshipBullet
 
 
-class Spaceship:
+class Spaceship(Sprite):
     """Spaceship which player can control"""
     def __init__(self, game):
         """Initialize spaceship at starting position"""

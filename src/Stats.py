@@ -9,8 +9,10 @@ class Stats:
         """Initialize statistics of the game"""
         # Get settings from the game
         self.settings = game.settings
-        # Set stats that are crucial to the game
-        self.reset_stats()
+        # Set spaceships left equal to the limit
+        self.spaceships_left = self.settings.spaceships_limit
+        # Set score to 0
+        self.score = 0
 
         # Highscore, that isn't affected by reset
         self.highscore = 0

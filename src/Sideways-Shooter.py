@@ -295,11 +295,15 @@ class Shooter:
             self.active = False
             # Show the mouse to navigate through the menu
             pygame.mouse.set_visible(True)
+            print("LOST: Lives = ", self.stats.spaceships_left)
             # Go back to menu
             return None
 
         # Decrement spaceships count (lives)
         self.stats.spaceships_left -= 1
+
+        print(f"Now you have{self.stats.spaceships_left} lives")
+
         # Update the spaceships count
         self.stat_board.set_spaceships()
 
@@ -317,7 +321,11 @@ class Shooter:
 
     def _start_game(self):
         """Start the game"""
+        # Activate the game
         self.active = True
+
+        # Reset the stats
+        self.stats.reset_stats()
 
         # Hide the cursor, so player can focus on the game
         pygame.mouse.set_visible(False)
