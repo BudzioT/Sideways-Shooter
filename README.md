@@ -10,8 +10,10 @@ But If you want to build:
 - Compile the Sideways-Shooter.py file, compiling other ones without it doesn't result in anything
 
 ## :camera:Screenshots
-- Menu:<br>
-- Game:<br>
+- Menu:<br>![image](https://github.com/BudzioT/Sideways-Shooter/assets/145849460/9a7e8ab0-57d4-4aac-a8e7-1cc105ccdced)
+
+- Game:<br>![image](https://github.com/BudzioT/Sideways-Shooter/assets/145849460/a3b77bf2-f639-4b35-ae55-0cf7fb230b78)
+
 
 ## :video_game: Controls
 - Movement: WASD or arrows
